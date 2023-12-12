@@ -3,17 +3,13 @@ const hasProperties = require("../errors/hasProperties");
 const hasRequiredProperties = hasProperties("supplier_name", "supplier_email");
 
 // MIDDLEWARE
-function supplierExists(req, res, next) {
-  suppliersService
-    .read(req.params.supplierId)
-    .then((supplier) => {
-      if (supplier) {
-        res.locals.supplier = supplier;
-        return next();
-      }
-      next({ status: 404, message: `Supplier cannot be found.` });
-    })
-    .catch(next);
+async function supplierExists(req, res, next) {
+  const supplier = await suppliersService.read(req.params.supplierId);
+  if (supplier) {
+    res.locals.supplier = supplier;
+    return next();
+  }
+  next({ status: 404, message: `Supplier cannot be found.` });
 }
 
 const VALID_PROPERTIES = [
@@ -46,43 +42,56 @@ function hasOnlyValidProperties(req, res, next) {
 }
 
 // CRUDL handlers
-
-function list(req, res, next) {
-  suppliersService
-    .list()
-    .then((data) => res.json({ data }))
-    .catch(next);
+async function list(req, res, next) {
+  try {
+    const data = await suppliersService.list();
+    res.json({ data });
+  } catch (error) {
+    next(error);
+  }
 }
 
-function read(req, res) {
-  const { supplier: data } = res.locals;
-  res.json({ data });
+async function read(req, res) {
+  try {
+    const { supplier: data } = res.locals;
+    res.json({ data });
+  } catch (error) {
+    next(error);
+  }
 }
 
-function create(req, res, next) {
-  suppliersService
-    .create(req.body.data)
-    .then((data) => res.status(201).json({ data }))
-    .catch(next);
+async function create(req, res) {
+  try {
+    const data = await suppliersService.create(req.body.data);
+    res.status(201).json({ data });
+  } catch (error) {
+    next(error);
+  }
 }
 
-function update(req, res, next) {
+async function update(req, res) {
   const updatedSupplier = {
     ...req.body.data,
     supplier_id: res.locals.supplier.supplier_id,
   };
-  suppliersService
-    .update(updatedSupplier)
-    .then((data) => res.json({ data }))
-    .catch(next);
+  try {
+    const data = await suppliersService.update(updatedSupplier);
+    res.json({ data });
+  } catch (error) {
+    next(error);
+  }
 }
 
-function destroy(req, res, next) {
-  suppliersService
-    .destroy(res.locals.supplier.supplier_id)
-    .then(() => res.sendStatus(204))
-    .catch(next);
+async function destroy(req, res) {
+  const { supplier } = res.locals;
+  try {
+    await suppliersService.destroy(supplier.supplier_id);
+    res.sendStatus(204);
+  } catch (error) {
+    next(error);
+  }
 }
+
 module.exports = {
   list: list,
   read: [supplierExists, read],
