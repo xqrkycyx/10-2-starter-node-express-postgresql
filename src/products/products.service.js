@@ -5,7 +5,18 @@ function list() {
 }
 
 function read(productId) {
-  return knex("products").select("*").where({ product_id: productId }).first();
+  // Original method:
+  // return knex("products").select("*").where({ product_id: productId }).first();
+
+  // 10-9: REWRITE WITH JOINS ACROSS THREE TABLES: products, products_categories, categories tables
+  // (Recall the analogous SQL query from 9-4: sequential joins of 3 tables: employees + employees_projects + projects
+  // https://overview.thinkful.com/curriculum/BACK_END-501/be-backend-web-development/be-creating-relations/be-joining-tables
+  return knex("products as p")
+    .join("products_categories as pc", "p.product_id", "pc.product_id")
+    .join("categories as c", "pc.category_id", "c.category_id")
+    .select("p.*", "c.*")
+    .where({ "p.product_id": productId })
+    .first();
 }
 
 function listOutOfStockCount() {
@@ -49,9 +60,7 @@ function listTotalInventoryDollarValueByProduct() {
     .groupBy("product_sku", "product_title")
     .orderBy("total_dollar_value", "desc");
 }
-// SELECT product_title, SUM(product_quantity_in_stock  * product_price) as total
-// FROM "products"
-// group by product_title order by total desc
+
 module.exports = {
   list,
   read,
