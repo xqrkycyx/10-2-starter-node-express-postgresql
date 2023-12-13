@@ -35,6 +35,31 @@ async function listOutOfStockCount(req, res, next) {
   }
 }
 
+async function listPriceSummary(req, res, next) {
+  try {
+    res.json({ data: await productsService.listPriceSummary() });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function listTotalWeightByProduct(req, res, next) {
+  try {
+    res.json({ data: await productsService.listTotalWeightByProduct() });
+  } catch (error) {
+    next(error);
+  }
+}
+async function listTotalInventoryDollarValueByProduct(req, res, next) {
+  try {
+    res.json({
+      data: await productsService.listTotalInventoryDollarValueByProduct(),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   list,
 };
@@ -43,4 +68,8 @@ module.exports = {
   read: [productExists, read],
   list: [list],
   listOutOfStockCount: listOutOfStockCount,
+  listPriceSummary: listPriceSummary,
+  listTotalWeightByProduct: listTotalWeightByProduct,
+  listTotalInventoryDollarValueByProduct:
+    listTotalInventoryDollarValueByProduct,
 };
