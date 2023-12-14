@@ -1,5 +1,5 @@
 {
-  "name": "starter-node-express-postgresql",
+  "name": "rest-server-node-express-knex-postgresql",
   "version": "1.0.0",
   "description": "REST Server with Node, Express, Knex & PostgreSQL",
   "main": "src/app.js",
