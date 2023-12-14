@@ -2,3 +2,11 @@ node_modules
 .env
 .idea
 .vscode
+
+# Solve env-specific NPM registry problem
+# (Pushing up package-lock.json file was causing Render
+# to try installing dependencies from Nexus-resolved URLs
+# (https://nexus.corp.indeed.com/) rather than the public
+# NPM registry, leading to build failures due to lack of permissions)
+# Fix: let Render install its own dependencies afresh
+package-lock.json

@@ -1,6 +1,8 @@
 # Module 11 Changes + Notes (Deploying server + database):
 
-Scripts distinguish between Development and Production environments/databases:
+ASSORTED NOTES:
+
+1. Had to add `package-lock.json` to `.gitignore` to fix build failures on Render (refer back to [summary of learnings about package registries and dependency resolution](https://docs.google.com/document/d/1cC-ahdywh2xn9Kmi8FsLuZZm2wUM6eXJ_3vACR95cwQ/edit?usp=sharing) for detailed explanation of problem.)
 
 Local development:
 
@@ -22,6 +24,67 @@ Deploying to production:
 # Database-connected Server: Node.js, Express & PostgreSQL
 
 This project runs a basic REST API using Node.js, Express, & PostgreSQL (ElephantSQL), with distinct instances for development and production.
+
+# Using the API (Making requests to endpoints)
+
+## GET endpoints for individual resources:
+
+- All products: [/products](https://rest-server-node-express-knex-postgresql.onrender.com/products)
+- Single product: [/products/1](https://rest-server-node-express-knex-postgresql.onrender.com/products/1)
+- All suppliers: [/suppliers](https://rest-server-node-express-knex-postgresql.onrender.com/suppliers)
+- Single supplier: [/suppliers/1](https://rest-server-node-express-knex-postgresql.onrender.com/suppliers/1)
+- All categories: [/categories](https://rest-server-node-express-knex-postgresql.onrender.com/categories)
+- (^^ There is no endpoint to return info for a single category)
+
+## GET endpoints for aggregate data:
+
+- All out of stock products: [/products/out-of-stock-count](https://rest-server-node-express-knex-postgresql.onrender.com/products/out-of-stock-count)
+- Mix, max and average price for each supplier: [/products/price-summary](https://rest-server-node-express-knex-postgresql.onrender.com/products/price-summary)
+- Current weight of inventory per product: [/products/total-weight-by-product](https://rest-server-node-express-knex-postgresql.onrender.com/products/total-weight-by-product)
+- Current dollar value of inventory per product: [/total-inventory-dollar-value-by-product](https://rest-server-node-express-knex-postgresql.onrender.com/products/total-inventory-dollar-value-by-product)
+
+## POST /suppliers (CREATE new supplier):
+
+`curl --location 'https://rest-server-node-express-knex-postgresql.onrender.com/suppliers' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "data": {
+        "supplier_name": "Frances Ha",
+        "supplier_address_line_1": "201 Mission St",
+        "supplier_address_line_2": "Ste 3000",
+        "supplier_city": "San Francisco",
+        "supplier_state": "CA",
+        "supplier_zip": "94103",
+        "supplier_phone": "5184568252",
+        "supplier_email": "frances.halady@gmail.com",
+        "supplier_notes": "pays on time",
+        "supplier_type_of_goods": "kitchenware"
+    }
+}'`
+
+## PUT /suppliers (UPDATE existing supplier):
+
+`curl --location --request PUT 'https://rest-server-node-express-knex-postgresql.onrender.com/suppliers/6' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "data": {
+        "supplier_name": "Frances Halady",
+        "supplier_address_line_1": "201 Mission St",
+        "supplier_address_line_2": "Ste 3000",
+        "supplier_city": "San Francisco",
+        "supplier_state": "CA",
+        "supplier_zip": "94103",
+        "supplier_phone": "5184568252",
+        "supplier_email": "frances.halady@gmail.com",
+        "supplier_notes": "pays on time",
+        "supplier_type_of_goods": "kitchenware"
+    }
+}'
+`
+
+## DELETE /suppliers (DESTROY existing supplier)
+
+`curl --location --request DELETE 'https://rest-server-node-express-knex-postgresql.onrender.com/suppliers/6'`
 
 ## Existing files
 
