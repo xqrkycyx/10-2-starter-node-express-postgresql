@@ -1,6 +1,27 @@
-# Starter code: Node.js, Express, & PostgreSQL
+# Module 11 Changes + Notes (Deploying server + database):
 
-This starter code is intended to be run for the Node.js, Express, & PostgreSQL module in the Thinkful curriculum.
+Scripts distinguish between Development and Production environments/databases:
+
+Local development:
+
+- Make a copy of `.env.sample` and name it `.env` (and ensure `.env` is properly excluded in `.gitignore`)
+- Create dev DB on ElephantSQL and copy the connection URL
+- In local `.env` file, assign the connection URL to const `DEVELOPMENT_DATABASE_URL`
+- Migrate and seed dev db: `npm run migrate:dev && npm run seed:dev`
+- Start server: `npm run start:dev`
+- DB troubleshooting: connect to dev db using DBeaver to see tables/records
+
+Deploying to production:
+
+- Create production DB on ElephantSQL and copy the connection URL
+- In local `.env` file, assign the connection URL to const `PRODUCTION_DATABASE_URL`
+- On Render, create environment variable `PRODUCTION_DATABASE_URL` and paste the connection URL as the value (**do not** include enclosing quotes with URL)
+- Migrate and seed prod db: `npm run migrate:prod` && `npm run seed:prod`
+- DB troubleshooting: connect to dev db using DBeaver to see tables/records
+
+# Database-connected Server: Node.js, Express & PostgreSQL
+
+This project runs a basic REST API using Node.js, Express, & PostgreSQL (ElephantSQL), with distinct instances for development and production.
 
 ## Existing files
 
